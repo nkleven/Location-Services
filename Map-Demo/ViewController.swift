@@ -52,16 +52,33 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         // Dispose of any resources that can be recreated.
     }
     
-    
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         print(locations)
         
-        //Populate ViewController Labels
         let userLocation: CLLocation = locations[0]
+        
+        //Check for valid speed and convert to MPH
+        if (userLocation.speed == -1){
+            self.speedLabel.text = "0"
+        }else{
+            let speedInMPH:UInt32 = UInt32(userLocation.speed * 2.23693629)
+            self.speedLabel.text = "\(speedInMPH)"// Multiplier 2.23693629 for MPH, 3.6 for KMPH
+        }
+        
+        //Check for valid Course or display N/A
+        if (userLocation.course == -1)
+        {
+            self.courseLabel.text = "N/A"
+        }
+        else{
+            let course:UInt32 = UInt32(userLocation.course)
+            self.courseLabel.text = "\(course)"
+        }
+        
+        
+        //Populate ViewController Labels
         self.latLabel.text = "\(userLocation.coordinate.latitude)"
         self.lonLable.text = "\(userLocation.coordinate.longitude)"
-        self.courseLabel.text = "\(userLocation.course)"
-        self.speedLabel.text = "\(userLocation.speed)"
         self.altitudeLabel.text = "\(userLocation.altitude)"
         
         //Find nearest address and update address label
@@ -96,7 +113,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             }
                     
         })
-
         
         //Update Map with Current Location
         let location:CLLocationCoordinate2D = CLLocationCoordinate2DMake(userLocation.coordinate.latitude, userLocation.coordinate.longitude)
@@ -108,7 +124,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
 
     func setLocation() -> Void {
-        
         let lattitude:CLLocationDegrees = 40.7
         let longitude:CLLocationDegrees = -73.9
         let latDelta:CLLocationDegrees = 0.01
