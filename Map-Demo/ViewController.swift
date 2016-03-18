@@ -59,10 +59,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         //Check for valid speed and convert to MPH
         if (userLocation.speed == -1){
-            self.speedLabel.text = "0"
+            self.speedLabel.text = "0 MPH"
         }else{
             let speedInMPH:UInt32 = UInt32(userLocation.speed * 2.23693629)
-            self.speedLabel.text = "\(speedInMPH)"// Multiplier 2.23693629 for MPH, 3.6 for KMPH
+            self.speedLabel.text = "\(speedInMPH) MPH"// Multiplier 2.23693629 for MPH, 3.6 for KMPH
         }
         
         //Check for valid Course or display N/A
@@ -75,11 +75,15 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             self.courseLabel.text = "\(course)"
         }
         
+        //Convert altitude to feet above or below Sea Level
+        let altitudeInFeet:Int32 = Int32(userLocation.altitude * 3.2808399)
+        self.altitudeLabel.text = "\(altitudeInFeet) Feet"
         
-        //Populate ViewController Labels
+        
+        //Populate Remaining ViewController Labels
         self.latLabel.text = "\(userLocation.coordinate.latitude)"
         self.lonLable.text = "\(userLocation.coordinate.longitude)"
-        self.altitudeLabel.text = "\(userLocation.altitude)"
+        
         
         //Find nearest address and update address label
         CLGeocoder().reverseGeocodeLocation(userLocation, completionHandler: { (placemarks, error) -> Void in
